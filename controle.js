@@ -26,8 +26,10 @@ class Controle {
 					break
 				case "ArrowUp":
 					this.paraFrente = true
+					break
 				case "ArrowDown":
 					this.re = true
+					break
 			}
 		}
 

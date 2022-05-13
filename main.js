@@ -1,4 +1,3 @@
-//TODO Debbugar porque a direcao para frente nao e animada
 /* Selecionando o canvas no HTML */
 const canvas = document.getElementById("meuCanvas")
 
