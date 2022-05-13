@@ -4,6 +4,28 @@ class Carro {
 		this.y = y
 		this.largura = largura
 		this.altura = altura
+
+		this.controle = new Controle()
+	}
+
+	atualizar() {
+		if(this.controle.paraFrente) {
+			this.y = this.y - 2
+			console.log(this.controle.paraFrente)
+		}
+
+		if(this.controle.re) {
+			this.y += 2
+			console.log(this.controle.re)
+		}
+
+		if(this.controle.paraEsquerda) {
+			this.x += 2
+		}
+
+		if(this.controle.paraDireita) {
+			this.x -= 2
+		}
 	}
 
 	desenhar(ctx) {
