@@ -16,16 +16,18 @@ class Estrada {
 		ctx.lineWidth = 5
 		ctx.strokeStyle = "white"
 
-		/* Linha vertical do lado esquerdo da tela*/
-		ctx.beginPath()
-		ctx.moveTo(this.esquerda, this.topo)
-		ctx.lineTo(this.esquerda, this.final)
-		ctx.stroke()
+		for(let i = 0; i <= this.numFaixas; i++) {
+			const x = interpolacaoLinear(
+				this.esquerda,
+				this.direita,
+				i/this.numFaixas
+			)
 
-		/* Linha vertical do lado direito da tela*/
-		ctx.beginPath()
-		ctx.moveTo(this.direita, this.topo)
-		ctx.lineTo(this.direita, this.final)
-		ctx.stroke()
+			/* Linha vertical do lado esquerdo da tela*/
+			ctx.beginPath()
+			ctx.moveTo(x, this.topo)
+			ctx.lineTo(x, this.final)
+			ctx.stroke()
+		}
 	}
 }
