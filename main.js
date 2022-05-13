@@ -10,14 +10,18 @@ canvas.width = 200
 */ 
 const ctx = canvas.getContext("2d")
 
+const estrada = new Estrada(canvas.width / 2, canvas.width * 0.9)
 const carro = new Carro(100, 100, 30, 50) 
-carro.desenhar(ctx)
+
 
 animar()
 
 function animar() {
 	carro.atualizar()
+
 	canvas.height = window.innerHeight // limpa a tela do último frame
+
+	estrada.desenhar(ctx)
 	carro.desenhar(ctx)
 	/* 
 	 	requestAnimationFrame é uma callback function que colocará 
