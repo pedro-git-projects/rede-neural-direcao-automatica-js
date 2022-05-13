@@ -21,8 +21,17 @@ function animar() {
 
 	canvas.height = window.innerHeight // limpa a tela do último frame
 
+	ctx.save()
+	/* 
+ 		Essa translação colocará o carro no terço de baixo do canvas 
+		e passará a impressão de que o que se move é a estrada
+		e não o carro 
+	*/
+	ctx.translate(0,  -carro.y + canvas.height * 0.7)
 	estrada.desenhar(ctx)
 	carro.desenhar(ctx)
+
+	ctx.restore()
 	/* 
 	 	requestAnimationFrame é uma callback function que colocará 
 		nossa função animar em loop 
