@@ -11,11 +11,14 @@ class Carro {
 		this.atrito  = 0.05
         this.angulo = 0
 
+		this.sensor = new Sensor(this)
+		
 		this.controle = new Controle()
 	}
 
 	atualizar() {
 		this.#move()	
+		this.sensor.atualizar()
 	}
 
 	#move() {
@@ -95,6 +98,9 @@ class Carro {
 
 		/* Restaura para o estado inicial de translações e rotações*/
 		ctx.restore()
+
+		/* Desenhando o sensor */
+		this.sensor.desenhar(ctx)
 	}
 }
 
