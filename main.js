@@ -10,4 +10,7 @@ canvas.widht = 200
 	um contexto de desenho no canvas, 
 	no nosso caso 2d 
 */ 
-const ctx = canvas.Context("2d")
+const ctx = canvas.getContext("2d")
+
+const carro = new Carro(100, 100, 30, 50) 
+carro.desenhar(ctx)
