@@ -2,9 +2,9 @@ class Sensor {
 	constructor(carro) {
 		this.carro = carro
 		/* 
-		    A ideia é que os sensores vão projetar raios 
+			A ideia é que os sensores vão projetar raios 
 			em uma espécie de sistema raycasting 
-		*/
+			*/
 		this.qtdeRaios = 10 
 		this.comprimentoRaio = 150
 		this.dispersaoRaios = Math.PI / 2 // == 90 graus
@@ -13,6 +13,10 @@ class Sensor {
 	}
 
 	atualizar() { 
+		this.#projetarRaios()	
+	}
+
+	#projetarRaios() {
 		this.raios = []
 		for(let i = 0; i < this.qtdeRaios; i++) {
 			const anguloRaio = interpolacaoLinear(
@@ -20,17 +24,17 @@ class Sensor {
 				-this.dispersaoRaios / 2, 
 				/* Tornando possível projetar um único raio */
 				this.qtdeRaios == 1 ? 0.5 : i/(this.qtdeRaios - 1)
-		) + this.carro.angulo
+			) + this.carro.angulo
 
 			const inicio = { x: this.carro.x, y: this.carro.y }
 			const fim = { 
 				x: this.carro.x - 
-					Math.sin(anguloRaio) * this.comprimentoRaio, 
+				Math.sin(anguloRaio) * this.comprimentoRaio, 
 				y: this.carro.y -
-					Math.cos(anguloRaio) * this.comprimentoRaio
+				Math.cos(anguloRaio) * this.comprimentoRaio
 			}
 			this.raios.push([inicio, fim])
-		}	
+		}
 	}
 
 	/* Desenhando os raios projetados */
