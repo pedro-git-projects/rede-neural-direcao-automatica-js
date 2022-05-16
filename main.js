@@ -2,7 +2,8 @@
 const canvas = document.getElementById("meuCanvas")
 
 /* Alterandoa a altura e largura do canvas para  parecer uma estrada */
-canvas.width = 200
+canvas.width=200
+
 /* 
 	O metodo HTMLCanvasElement.getContext() retorna 
 	um contexto de desenho no canvas, 
@@ -11,30 +12,30 @@ canvas.width = 200
 const ctx = canvas.getContext("2d")
 
 const estrada = new Estrada(canvas.width / 2, canvas.width * 0.9)
-const carro = new Carro(estrada.getCentroFaixa(1), 100, 30, 50) 
-
+const carro =new Carro (estrada.getCentroFaixa(1), 100, 30, 50)
 
 animar()
 
-function animar() {
-	carro.atualizar()
+function animar(){
+    carro.atualizar(estrada.limites)
 
-	canvas.height = window.innerHeight // limpa a tela do último frame
+    canvas.height=window.innerHeight // limpa a tela do último frame
 
-	ctx.save()
+    ctx.save()
 	/* 
  		Essa translação colocará o carro no terço de baixo do canvas 
 		e passará a impressão de que o que se move é a estrada
 		e não o carro 
 	*/
-	ctx.translate(0,  -carro.y + canvas.height * 0.7)
-	estrada.desenhar(ctx)
-	carro.desenhar(ctx)
+    ctx.translate(0, -carro.y + canvas.height * 0.7)
 
-	ctx.restore()
+    estrada.desenhar(ctx)
+    carro.desenhar(ctx)
+
+    ctx.restore()
 	/* 
 	 	requestAnimationFrame é uma callback function que colocará 
 		nossa função animar em loop 
-	*/
+	*/    
 	requestAnimationFrame(animar)
 }
