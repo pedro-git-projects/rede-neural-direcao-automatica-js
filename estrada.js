@@ -24,7 +24,7 @@ class Estrada {
 	}
 
 	/* 
-	 	Retorna o centro de uma faixa dado seu index 
+		Retorna o centro de uma faixa dado seu index 
 		faixas serão indexadas da esquerda para a direita
 		e são 0-indexadas
 	*/
@@ -32,7 +32,7 @@ class Estrada {
 		const larguraDaFaixa = this.largura/this.numFaixas
 		return this.esquerda + larguraDaFaixa / 2 +
 			/* Corrigindo possíveis estouros de faixa */
-            Math.min(indexFaixa,this.numFaixas - 1) * larguraDaFaixa
+			Math.min(indexFaixa,this.numFaixas - 1) * larguraDaFaixa
 	}
 
 	desenhar(ctx) {
@@ -40,7 +40,7 @@ class Estrada {
 		ctx.strokeStyle = "white"
 
 		/* 
-		 	Usa interpolação linear para desenhar as faixas 
+			Usa interpolação linear para desenhar as faixas 
 			de acordo com numFaixas
 		*/
 		for(let i = 1; i<=this.numFaixas - 1; i++) {
