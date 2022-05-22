@@ -14,18 +14,18 @@ class Sensor {
 		this.leituras=[]
 	}
 
-	atualizar(limitesEstrada) {
+	atualizar(limitesEstrada, trafego) {
 		this.#projetarRaios()
 
 		this.leituras = []
 		for(let i=0; i<this.raios.length; i++) {
 			this.leituras.push(
-				this.#getLeitura(this.raios[i],limitesEstrada)
+				this.#getLeitura(this.raios[i],limitesEstrada, trafego)
 			)
 		}
 	}
 
-	#getLeitura(raio,limitesEstrada) {
+	#getLeitura(raio,limitesEstrada, trafego) {
 		let colisoes=[]
 		/* Buscando colisão e armazenando em colisao */
 		for(let i=0; i < limitesEstrada.length; i++) {
@@ -40,6 +40,22 @@ class Sensor {
 				colisoes.push(colisao)
 			}
 		}
+		
+		for(let i = 0; i < trafego.length; i ++) {
+			const polig = trafego[i].poligono
+			for(let j = 0; j < polig.length; j++) {
+				const valor = getInterseccao(
+					raio[0], 
+					raio[1], 
+					polig[j],
+					polig[(j+1)%polig.length]
+			)
+				if(valor) {
+					colisoes.push(valor)
+				}
+			}
+		}
+
 		/* Retornando null caso não haja colisões */
 		if(colisoes.length == 0) {
 			return null

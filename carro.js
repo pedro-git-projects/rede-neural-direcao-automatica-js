@@ -1,5 +1,5 @@
 class Carro {
-	constructor(x, y, largura, altura) {
+	constructor(x, y, largura, altura, tipoControle, velMaxima = 3) {
 		this.x = x
 		this.y = y
 		this.largura = largura
@@ -7,32 +7,46 @@ class Carro {
 
 		this.velocidade = 0
 		this.aceleracao = 0.2
-		this.velMaxima = 3
+		this.velMaxima = velMaxima 
 		this.atrito = 0.05
 		this.angulo = 0
 		this.danificado = false
 
-		this.sensor = new Sensor(this)
-		this.controle = new Controle()
+		/* O carro que não é o principal não precisa de sensores */
+		if(tipoControle != "AUTO") {
+			this.sensor = new Sensor(this)
+		}
+		this.controle = new Controle(tipoControle)
 	}
 
-	atualizar(limitesEstrada){
+	atualizar(limitesEstrada, trafego) {
 		/* Para o carro se ele for danificado */
 		if(!this.danificado) {
 			this.#movimento()
 			this.poligono = this.#criarPoligono()
-			this.danificado = this.#verificarDano(limitesEstrada)
+			this.danificado = this.#verificarDano(limitesEstrada, trafego)
 		}
-		this.sensor.atualizar(limitesEstrada)
+		/* Checando se há um sensor para ser atualizado */
+		if(this.sensor) {
+			this.sensor.atualizar(limitesEstrada, trafego)
+		}
 	}
 
-	#verificarDano(limitesEstrada) {
+	#verificarDano(limitesEstrada, trafego) {
 		for(let i = 0; i < limitesEstrada.length; i++) {
 			/* Testando se há intersecção entre o carro e os limites */
 			if(interecPolig(this.poligono, limitesEstrada[i])) {
 				return true
 			}
 		}
+
+		for(let i = 0; i < trafego.length; i++) {
+			/* Testando se há intersecção entre um carro e outro */
+			if(interecPolig(this.poligono, trafego[i].poligono)) {
+				return true
+			}
+		}
+
 		return false
 	}
 
@@ -117,7 +131,7 @@ class Carro {
 		this.y -= Math.cos(this.angulo)*this.velocidade
 	}
 
-	desenhar(ctx) {
+	desenhar(ctx, cor) {
 		/* 
 			Testando se o carro está danificado, 
 			se sim, desenha em cinza	
@@ -125,7 +139,7 @@ class Carro {
 		if(this.danificado) {
 			ctx.fillStyle = "gray"
 		} else {
-			ctx.fillStyle = "black"
+			ctx.fillStyle = cor 
 		}
 
 		ctx.beginPath()	
@@ -135,6 +149,10 @@ class Carro {
 			ctx.lineTo(this.poligono[i].x, this.poligono[i].y)
 		}
 		ctx.fill()
-		this.sensor.desenhar(ctx)
+		
+		/* Checa se há um sensor para ser desenhado */
+		if(this.sensor) {
+			this.sensor.desenhar(ctx)
+		}
 	}
 }
