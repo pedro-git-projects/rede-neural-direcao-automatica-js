@@ -12,12 +12,19 @@ canvas.width=200
 const ctx = canvas.getContext("2d")
 
 const estrada = new Estrada(canvas.width / 2, canvas.width * 0.9)
-const carro =new Carro (estrada.getCentroFaixa(1), 100, 30, 50)
+const carro = new Carro (estrada.getCentroFaixa(1), 100, 30, 50, "PRINCIPAL")
+const trafego = [
+	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2)
+]
 
 animar()
 
 function animar(){
-    carro.atualizar(estrada.limites)
+	for(let i = 0; i < trafego.length; i++) {
+		trafego[i].atualizar(estrada.limites, [])
+	}
+
+    carro.atualizar(estrada.limites, trafego)
 
     canvas.height=window.innerHeight // limpa a tela do último frame
 
@@ -29,8 +36,13 @@ function animar(){
 	*/
     ctx.translate(0, -carro.y + canvas.height * 0.7)
 
-    estrada.desenhar(ctx)
-    carro.desenhar(ctx)
+    estrada.desenhar(ctx) // desenhando a estrada
+
+	for(let i = 0; i < trafego.length; i++) {
+		trafego[i].desenhar(ctx, "red")
+	} // desenhando o trafego
+
+    carro.desenhar(ctx, "blue") // desenhando o carro
 
     ctx.restore()
 	/* 

@@ -1,11 +1,18 @@
 class Controle {
-	constructor() {
+	constructor(tipo) {
 		this.frente = false
 		this.esquerda = false
 		this.direita = false
 		this.re = false
-
-		this.#addKeyboardListeners()
+		
+		switch(tipo) {
+			case "PRINCIPAL":
+				this.#addKeyboardListeners()
+				break
+			case "AUTO":
+				this.frente = true
+				break
+		}
 	}
 
 	/* Método privado para pegar eventos do teclado */
