@@ -17,9 +17,12 @@ class Carro {
 	}
 
 	atualizar(limitesEstrada){
-		this.#movimento()
-		this.poligono = this.#criarPoligono()
-		this.danificado = this.#verificarDano(limitesEstrada)
+		/* Para o carro se ele for danificado */
+		if(!this.danificado) {
+			this.#movimento()
+			this.poligono = this.#criarPoligono()
+			this.danificado = this.#verificarDano(limitesEstrada)
+		}
 		this.sensor.atualizar(limitesEstrada)
 	}
 
@@ -27,11 +30,9 @@ class Carro {
 		for(let i = 0; i < limitesEstrada.length; i++) {
 			/* Testando se há intersecção entre o carro e os limites */
 			if(interecPolig(this.poligono, limitesEstrada[i])) {
-				console.log(true)
 				return true
 			}
 		}
-		console.log(false)
 		return false
 	}
 
@@ -117,6 +118,16 @@ class Carro {
 	}
 
 	desenhar(ctx) {
+		/* 
+			Testando se o carro está danificado, 
+			se sim, desenha em cinza	
+		*/
+		if(this.danificado) {
+			ctx.fillStyle = "gray"
+		} else {
+			ctx.fillStyle = "black"
+		}
+
 		ctx.beginPath()	
 		/* Desenhando o carro utilizando os pontos */
 		ctx.moveTo(this.poligono[0].x, this.poligono[0].y)
