@@ -17,7 +17,34 @@ class Carro {
 
 	atualizar(limitesEstrada){
 		this.#movimento()
+		this.poligono = this.#criarPoligono()
 		this.sensor.atualizar(limitesEstrada)
+	}
+
+	#criarPoligono() {
+		/* Um ponto por quina do carro*/
+		const pontos = []
+		/* Raio */
+		const rad = Math.hypot(this.largura, this.altura) / 2
+		/* Angulo */
+		const alfa = Math.atan2(this.largura, this.altura)
+		pontos.push({
+			x : this.x - Math.sin(this.angulo - alfa) * rad,
+			y : this.y - Math.cos(this.angulo - alfa) * rad
+		})
+		pontos.push({
+			x : this.x - Math.sin(this.angulo + alfa) * rad,
+			y : this.y - Math.cos(this.angulo + alfa) * rad
+		})	
+		pontos.push({
+			x : this.x - Math.sin(Math.PI + this.angulo - alfa) * rad,
+			y : this.y - Math.cos(Math.PI + this.angulo - alfa) * rad
+		})	
+		pontos.push({
+			x : this.x - Math.sin(Math.PI + this.angulo + alfa) * rad,
+			y : this.y - Math.cos(Math.PI + this.angulo + alfa) * rad
+		})	
+		return pontos
 	}
 
 	#movimento(){
@@ -76,21 +103,12 @@ class Carro {
 	}
 
 	desenhar(ctx) {
-		ctx.save()
-		ctx.translate(this.x,this.y)
-		ctx.rotate(-this.angulo)
-
-		ctx.beginPath()
-		ctx.rect(
-			-this.largura/2,
-			-this.altura/2,
-			this.largura,
-			this.altura
-		);
+		ctx.beginPath()	
+		ctx.moveTo(this.poligono[0].x, this.poligono[0].y)
+		for(let i = 1; i < this.poligono.length; i++) {
+			ctx.lineTo(this.poligono[i].x, this.poligono[i].y)
+		}
 		ctx.fill()
-
-		ctx.restore()
-
 		this.sensor.desenhar(ctx)
 	}
 }
