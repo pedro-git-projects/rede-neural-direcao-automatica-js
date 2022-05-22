@@ -10,6 +10,7 @@ class Carro {
 		this.velMaxima = 3
 		this.atrito = 0.05
 		this.angulo = 0
+		this.danificado = false
 
 		this.sensor = new Sensor(this)
 		this.controle = new Controle()
@@ -18,7 +19,20 @@ class Carro {
 	atualizar(limitesEstrada){
 		this.#movimento()
 		this.poligono = this.#criarPoligono()
+		this.danificado = this.#verificarDano(limitesEstrada)
 		this.sensor.atualizar(limitesEstrada)
+	}
+
+	#verificarDano(limitesEstrada) {
+		for(let i = 0; i < limitesEstrada.length; i++) {
+			/* Testando se há intersecção entre o carro e os limites */
+			if(interecPolig(this.poligono, limitesEstrada[i])) {
+				console.log(true)
+				return true
+			}
+		}
+		console.log(false)
+		return false
 	}
 
 	#criarPoligono() {
@@ -104,6 +118,7 @@ class Carro {
 
 	desenhar(ctx) {
 		ctx.beginPath()	
+		/* Desenhando o carro utilizando os pontos */
 		ctx.moveTo(this.poligono[0].x, this.poligono[0].y)
 		for(let i = 1; i < this.poligono.length; i++) {
 			ctx.lineTo(this.poligono[i].x, this.poligono[i].y)
