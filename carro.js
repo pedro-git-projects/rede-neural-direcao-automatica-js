@@ -10,14 +10,56 @@ class Carro {
 		this.velMaxima = 3
 		this.atrito = 0.05
 		this.angulo = 0
+		this.danificado = false
 
 		this.sensor = new Sensor(this)
 		this.controle = new Controle()
 	}
 
 	atualizar(limitesEstrada){
-		this.#movimento()
+		/* Para o carro se ele for danificado */
+		if(!this.danificado) {
+			this.#movimento()
+			this.poligono = this.#criarPoligono()
+			this.danificado = this.#verificarDano(limitesEstrada)
+		}
 		this.sensor.atualizar(limitesEstrada)
+	}
+
+	#verificarDano(limitesEstrada) {
+		for(let i = 0; i < limitesEstrada.length; i++) {
+			/* Testando se há intersecção entre o carro e os limites */
+			if(interecPolig(this.poligono, limitesEstrada[i])) {
+				return true
+			}
+		}
+		return false
+	}
+
+	#criarPoligono() {
+		/* Um ponto por quina do carro*/
+		const pontos = []
+		/* Raio */
+		const rad = Math.hypot(this.largura, this.altura) / 2
+		/* Angulo */
+		const alfa = Math.atan2(this.largura, this.altura)
+		pontos.push({
+			x : this.x - Math.sin(this.angulo - alfa) * rad,
+			y : this.y - Math.cos(this.angulo - alfa) * rad
+		})
+		pontos.push({
+			x : this.x - Math.sin(this.angulo + alfa) * rad,
+			y : this.y - Math.cos(this.angulo + alfa) * rad
+		})	
+		pontos.push({
+			x : this.x - Math.sin(Math.PI + this.angulo - alfa) * rad,
+			y : this.y - Math.cos(Math.PI + this.angulo - alfa) * rad
+		})	
+		pontos.push({
+			x : this.x - Math.sin(Math.PI + this.angulo + alfa) * rad,
+			y : this.y - Math.cos(Math.PI + this.angulo + alfa) * rad
+		})	
+		return pontos
 	}
 
 	#movimento(){
@@ -76,21 +118,23 @@ class Carro {
 	}
 
 	desenhar(ctx) {
-		ctx.save()
-		ctx.translate(this.x,this.y)
-		ctx.rotate(-this.angulo)
+		/* 
+			Testando se o carro está danificado, 
+			se sim, desenha em cinza	
+		*/
+		if(this.danificado) {
+			ctx.fillStyle = "gray"
+		} else {
+			ctx.fillStyle = "black"
+		}
 
-		ctx.beginPath()
-		ctx.rect(
-			-this.largura/2,
-			-this.altura/2,
-			this.largura,
-			this.altura
-		);
+		ctx.beginPath()	
+		/* Desenhando o carro utilizando os pontos */
+		ctx.moveTo(this.poligono[0].x, this.poligono[0].y)
+		for(let i = 1; i < this.poligono.length; i++) {
+			ctx.lineTo(this.poligono[i].x, this.poligono[i].y)
+		}
 		ctx.fill()
-
-		ctx.restore()
-
 		this.sensor.desenhar(ctx)
 	}
 }
