@@ -29,9 +29,16 @@ const trafego = [
 
 let melhorCarro = carros[0]
 if(localStorage.getItem("melhorCerebro")) {
-	melhorCarro.cerebro = JSON.parse(
-		localStorage.getItem("melhorCerebro")
-	)
+	for(let i  = 0; i < carros.length; i++) {
+		carros[i].cerebro = JSON.parse(
+			localStorage.getItem("melhorCerebro")
+		)
+		/* Fará com que o algoritmo use variacoes pequenas do melhor cerebro */
+		if(i != 0) {
+			RedeNeural.mutar(carros[i].cerebro, 0.1)
+		}
+	}
+
 }
 
 animar()
@@ -58,9 +65,9 @@ function animar(time) /* time vem de request animation frame */ {
 	for(let i = 0; i < trafego.length; i++) {
 		trafego[i].atualizar(estrada.limites, [])
 	}
-	
+
 	for(let i = 0; i < carros.length; i++) {
-    	carros[i].atualizar(estrada.limites, trafego)
+		carros[i].atualizar(estrada.limites, trafego)
 	}
 
 	// O melhor carro é o carro com o menor valor no eixo y
@@ -70,18 +77,18 @@ function animar(time) /* time vem de request animation frame */ {
 		)
 	)
 
-    canvasCarro.height = window.innerHeight // limpa a tela do último frame
+	canvasCarro.height = window.innerHeight // limpa a tela do último frame
 	canvasRede.height = window.innerHeight
 
-    ctxCarro.save()
+	ctxCarro.save()
 	/* 
- 		Essa translação colocará o carro no terço de baixo do canvas 
+		Essa translação colocará o carro no terço de baixo do canvas 
 		e passará a impressão de que o que se move é a estrada
 		e não o carro 
 	*/
-    ctxCarro.translate(0, -melhorCarro.y + canvasCarro.height * 0.7)
+	ctxCarro.translate(0, -melhorCarro.y + canvasCarro.height * 0.7)
 
-    estrada.desenhar(ctxCarro) // desenhando a estrada
+	estrada.desenhar(ctxCarro) // desenhando a estrada
 
 	for(let i = 0; i < trafego.length; i++) {
 		trafego[i].desenhar(ctxCarro, "red")
@@ -89,15 +96,15 @@ function animar(time) /* time vem de request animation frame */ {
 
 	ctxCarro.globalAlpha = 0.2 // tornando os carros semi-transparentes
 	for(let i = 0; i < carros.length; i++) {
-    	carros[i].desenhar(ctxCarro, "blue")
+		carros[i].desenhar(ctxCarro, "blue")
 	}
 	ctxCarro.globalAlpha = 1 
 	/*  O melhor carro é desenhado com sensores e sem transparencia */
 	melhorCarro.desenhar(ctxCarro, "blue", true)
 
-    ctxCarro.restore()
+	ctxCarro.restore()
 	/* 
-	 	requestAnimationFrame é uma callback function que colocará 
+		requestAnimationFrame é uma callback function que colocará 
 		nossa função animar em loop 
 	*/    
 	ctxRede.lineDashOffset = -time/50
