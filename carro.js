@@ -12,9 +12,16 @@ class Carro {
 		this.angulo = 0
 		this.danificado = false
 
+		/* Se o tipo de controle for AI a rede neural controlara o carro */
+		this.usarCerebro = tipoControle == "IA"
+
 		/* O carro que não é o principal não precisa de sensores */
 		if(tipoControle != "AUTO") {
 			this.sensor = new Sensor(this)
+			/* Nossa rede neural tera tantos niveis quanto raios do sensor */
+			this.cerebro = new RedeNeural(
+				[this.sensor.qtdeRaios, 6, 4]
+			)
 		}
 		this.controle = new Controle(tipoControle)
 	}
@@ -29,6 +36,23 @@ class Carro {
 		/* Checando se há um sensor para ser atualizado */
 		if(this.sensor) {
 			this.sensor.atualizar(limitesEstrada, trafego)
+			/* 
+			 	Para fazer com que os neurons recebam valores baixos se 
+				o objeto esta longe
+				e valores altos se esta perto 
+			*/
+			const offsets = this.sensor.leituras.map(
+				s => s == null ? 0 :  1 - s.offset
+			)
+			const saidas = RedeNeural.passaParaFrente(offsets, this.cerebro)
+			console.log(saidas)
+
+			if(this.usarCerebro) {
+				this.controle.frente = saidas[0]
+				this.controle.esquerda = saidas[1]
+				this.controle.direita= saidas[2]
+				this.controle.re = saidas[3]
+			}
 		}
 	}
 

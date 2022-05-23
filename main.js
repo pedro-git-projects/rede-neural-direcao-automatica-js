@@ -12,7 +12,7 @@ canvas.width=200
 const ctx = canvas.getContext("2d")
 
 const estrada = new Estrada(canvas.width / 2, canvas.width * 0.9)
-const carro = new Carro (estrada.getCentroFaixa(1), 100, 30, 50, "PRINCIPAL")
+const carro = new Carro (estrada.getCentroFaixa(1), 100, 30, 50, "IA")
 const trafego = [
 	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2)
 ]
