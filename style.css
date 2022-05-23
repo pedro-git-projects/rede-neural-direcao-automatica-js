@@ -5,6 +5,10 @@ body {
 	text-align: center;
 }
 
-#meuCanvas {
+#canvasRede {
+	background: black;
+}
+
+#canvasCarro {
 	background: lightgray;
 }
