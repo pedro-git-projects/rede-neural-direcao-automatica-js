@@ -5,8 +5,6 @@ const canvasCarro = document.getElementById("canvasCarro")
 canvasCarro.width = 200
 
 const canvasRede = document.getElementById("canvasRede")
-
-/* Alterandoa a altura e largura do canvas para  parecer uma estrada */
 canvasRede.width = 300
 
 
@@ -26,7 +24,7 @@ const trafego = [
 
 animar()
 
-function animar(){
+function animar(time) /* time vem de request animation frame */ {
 	for(let i = 0; i < trafego.length; i++) {
 		trafego[i].atualizar(estrada.limites, [])
 	}
@@ -57,6 +55,7 @@ function animar(){
 	 	requestAnimationFrame é uma callback function que colocará 
 		nossa função animar em loop 
 	*/    
+	ctxRede.lineDashOffset = -time/50
 	Visualizador.desenharRede(ctxRede, carro.cerebro)
 	requestAnimationFrame(animar)
 }
