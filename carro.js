@@ -24,6 +24,9 @@ class Carro {
 			)
 		}
 		this.controle = new Controle(tipoControle)
+
+		this.img = new Image()
+		this.img.src = "carro.png"
 	}
 
 	atualizar(limitesEstrada, trafego) {
@@ -155,24 +158,19 @@ class Carro {
 	}
 
 	desenhar(ctx, cor, desenharSensores = false) {
-		/* 
-			Testando se o carro está danificado, 
-			se sim, desenha em cinza	
-		*/
-		if(this.danificado) {
-			ctx.fillStyle = "gray"
-		} else {
-			ctx.fillStyle = cor 
-		}
-
-		ctx.beginPath()	
-		/* Desenhando o carro utilizando os pontos */
-		ctx.moveTo(this.poligono[0].x, this.poligono[0].y)
-		for(let i = 1; i < this.poligono.length; i++) {
-			ctx.lineTo(this.poligono[i].x, this.poligono[i].y)
-		}
-		ctx.fill()
-		
+		/* Desenhando o carro utilizando a imagem */
+		ctx.save()
+		ctx.translate(this.x, this.y)
+		ctx.rotate( -this.angulo)
+		ctx.drawImage(
+			this.img,
+			-this.largura / 2,
+			-this.altura / 2,
+			this.largura,
+			this.altura
+		)
+		ctx.restore()
+	
 		/* Checa se há um sensor para ser desenhado */
 		if(this.sensor && desenharSensores) {
 			this.sensor.desenhar(ctx)
