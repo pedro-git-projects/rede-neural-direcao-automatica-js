@@ -18,6 +18,28 @@ class RedeNeural {
 		}
 		return saidas
 	}
+
+	/* Causa mutações na nossa rede neural */
+	static mutar(rede, quantidade = 1) {
+		rede.niveis.forEach(nivel => {
+			for(let i = 0; i < nivel.biases.length; i++) {
+				nivel.biases[i] = interpolacaoLinear(
+					nivel.biases[i], 
+					Math.random() * 2 - 1, 
+					quantidade
+			)
+			}
+			for(let i = 0; i < nivel.pesos.length; i++) {
+				for(let j = 0; j < nivel.pesos[i].length; j++) {
+					nivel.pesos[i][j] = interpolacaoLinear(
+						nivel.pesos[i][j], 
+						Math.random() * 2 - 1, 
+						quantidade
+				)
+				}
+			}
+		})
+	}
 }
 
 class Nivel {
