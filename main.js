@@ -22,7 +22,9 @@ const estrada = new Estrada(canvasCarro.width / 2, canvasCarro.width * 0.9)
 n = 100
 const carros = gerarCarros(n)
 const trafego = [
-	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2)
+	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2),
+	new Carro (estrada.getCentroFaixa(0), -300, 30, 50, "AUTO", 2),
+	new Carro (estrada.getCentroFaixa(2), -300, 30, 50, "AUTO", 2)
 ]
 
 let melhorCarro = carros[0]
