@@ -155,7 +155,7 @@ class Carro {
 		this.y -= Math.cos(this.angulo)*this.velocidade
 	}
 
-	desenhar(ctx, cor) {
+	desenhar(ctx, cor, desenharSensores = false) {
 		/* 
 			Testando se o carro está danificado, 
 			se sim, desenha em cinza	
@@ -175,7 +175,7 @@ class Carro {
 		ctx.fill()
 		
 		/* Checa se há um sensor para ser desenhado */
-		if(this.sensor) {
+		if(this.sensor && desenharSensores) {
 			this.sensor.desenhar(ctx)
 		}
 	}

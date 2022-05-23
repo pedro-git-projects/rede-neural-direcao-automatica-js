@@ -17,19 +17,39 @@ const ctxCarro = canvasCarro.getContext("2d")
 const ctxRede = canvasRede.getContext("2d")
 
 const estrada = new Estrada(canvasCarro.width / 2, canvasCarro.width * 0.9)
-const carro = new Carro (estrada.getCentroFaixa(1), 100, 30, 50, "IA")
+
+/* Substituindo um unico carro por 100 carros em paralelo */
+n = 100
+const carros = gerarCarros(n)
 const trafego = [
 	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2)
 ]
 
 animar()
 
+function gerarCarros(n) {
+	const carros = []
+	for(let i = 1; i <= n; i++) {
+		carros.push(new Carro(estrada.getCentroFaixa(1), 100, 30, 50, "IA"))
+	}
+	return carros
+}
+
 function animar(time) /* time vem de request animation frame */ {
 	for(let i = 0; i < trafego.length; i++) {
 		trafego[i].atualizar(estrada.limites, [])
 	}
+	
+	for(let i = 0; i < carros.length; i++) {
+    	carros[i].atualizar(estrada.limites, trafego)
+	}
 
-    carro.atualizar(estrada.limites, trafego)
+	// O melhor carro é o carro com o menor valor no eixo y
+	const melhorCarro = carros.find(
+		c => c.y == Math.min(
+			...carros.map(c => c.y)
+		)
+	)
 
     canvasCarro.height = window.innerHeight // limpa a tela do último frame
 	canvasRede.height = window.innerHeight
@@ -40,7 +60,7 @@ function animar(time) /* time vem de request animation frame */ {
 		e passará a impressão de que o que se move é a estrada
 		e não o carro 
 	*/
-    ctxCarro.translate(0, -carro.y + canvasCarro.height * 0.7)
+    ctxCarro.translate(0, -melhorCarro.y + canvasCarro.height * 0.7)
 
     estrada.desenhar(ctxCarro) // desenhando a estrada
 
@@ -48,7 +68,13 @@ function animar(time) /* time vem de request animation frame */ {
 		trafego[i].desenhar(ctxCarro, "red")
 	} // desenhando o trafego
 
-    carro.desenhar(ctxCarro, "blue") // desenhando o carro
+	ctxCarro.globalAlpha = 0.2 // tornando os carros semi-transparentes
+	for(let i = 0; i < carros.length; i++) {
+    	carros[i].desenhar(ctxCarro, "blue")
+	}
+	ctxCarro.globalAlpha = 1 
+	/*  O melhor carro é desenhado com sensores e sem transparencia */
+	melhorCarro.desenhar(ctxCarro, "blue", true)
 
     ctxCarro.restore()
 	/* 
@@ -56,6 +82,7 @@ function animar(time) /* time vem de request animation frame */ {
 		nossa função animar em loop 
 	*/    
 	ctxRede.lineDashOffset = -time/50
-	Visualizador.desenharRede(ctxRede, carro.cerebro)
+	/* A rede neural desenhada correspode a do melhor carro */
+	Visualizador.desenharRede(ctxRede, melhorCarro.cerebro)
 	requestAnimationFrame(animar)
 }
