@@ -45,7 +45,6 @@ class Carro {
 				s => s == null ? 0 :  1 - s.offset
 			)
 			const saidas = RedeNeural.passaParaFrente(offsets, this.cerebro)
-			console.log(saidas)
 
 			if(this.usarCerebro) {
 				this.controle.frente = saidas[0]

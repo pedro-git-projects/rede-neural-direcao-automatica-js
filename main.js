@@ -25,7 +25,24 @@ const trafego = [
 	new Carro (estrada.getCentroFaixa(1), -100, 30, 50, "AUTO", 2)
 ]
 
+let melhorCarro = carros[0]
+if(localStorage.getItem("melhorCerebro")) {
+	melhorCarro.cerebro = JSON.parse(
+		localStorage.getItem("melhorCerebro")
+	)
+}
+
 animar()
+
+/* Salva o cerebro do melhor carro */
+function salvar() {
+	localStorage.setItem("melhorCerebro", JSON.stringify(melhorCarro.cerebro))
+}
+
+/* Deleta o cérebro salvo */
+function deletar() {
+	localStorage.removeItem("melhorCerebro")
+}
 
 function gerarCarros(n) {
 	const carros = []
