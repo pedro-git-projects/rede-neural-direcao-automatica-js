@@ -45,7 +45,6 @@ class Carro {
 				s => s == null ? 0 :  1 - s.offset
 			)
 			const saidas = RedeNeural.passaParaFrente(offsets, this.cerebro)
-			console.log(saidas)
 
 			if(this.usarCerebro) {
 				this.controle.frente = saidas[0]
@@ -155,7 +154,7 @@ class Carro {
 		this.y -= Math.cos(this.angulo)*this.velocidade
 	}
 
-	desenhar(ctx, cor) {
+	desenhar(ctx, cor, desenharSensores = false) {
 		/* 
 			Testando se o carro está danificado, 
 			se sim, desenha em cinza	
@@ -175,7 +174,7 @@ class Carro {
 		ctx.fill()
 		
 		/* Checa se há um sensor para ser desenhado */
-		if(this.sensor) {
+		if(this.sensor && desenharSensores) {
 			this.sensor.desenhar(ctx)
 		}
 	}
